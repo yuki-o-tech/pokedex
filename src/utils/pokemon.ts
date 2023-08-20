@@ -1,4 +1,4 @@
-interface PokemonAllResponseData {
+export interface PokemonAllResponseData {
   count: number
   next: string | null
   previous: string | null

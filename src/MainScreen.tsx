@@ -1,37 +1,65 @@
+import { useEffect } from "react"
+import { useRecoilState } from "recoil"
 import { PokemonDetail } from "./utils/pokemon"
+import Button from "@mui/material/Button"
 import Card from "./common/Card"
 import { Grid } from "./index.styled"
+import Box, { Col } from "./common/Box"
+import { getAllPokemon, loadPokemon } from "./utils/pokemon"
+import {
+  initialPokemonDataState,
+  loadingState,
+  nextUrlState,
+  pokemonDataState,
+  prevUrlState,
+} from "../recoil/state"
+import { RecoilState, useRecoilValue } from "recoil"
 
-interface MainScreenProps {
-  dataArr: PokemonDetail[]
-  isLoading: boolean
-}
-const MainScreen = ({ dataArr, isLoading }: MainScreenProps) => {
+const MainScreen = () => {
+  const initialPokemonData = useRecoilValue(initialPokemonDataState)
+  const pokemonData = useRecoilValue(pokemonDataState)
+  const loading = useRecoilValue(loadingState)
+  const [nextUrl, setNextUrl] = useRecoilState(nextUrlState)
+  const [prevUrl, setPrevUrl] = useRecoilState(prevUrlState)
+
+  useEffect(() => {
+    setNextUrl(initialPokemonData?.next || null)
+    setPrevUrl(initialPokemonData?.previous || null)
+  }, [initialPokemonData])
+
+  const handlePageChange = async (url: string | null) => {
+    if (!url) return
+
+    const newData = await getAllPokemon(url)
+    setNextUrl(newData.next)
+    setPrevUrl(newData.previous)
+  }
+  // この時点で次のページや前のページのデータも取得することができます。
+  // 必要に応じて、そのデータを使用してstateを更新することができます。
+
+  console.log("initialPokemonData", initialPokemonData)
+  console.log("pokemonData", pokemonData)
+
+  console.log("prev", prevUrl)
+  console.log("next", nextUrl)
   return (
-    <>
-      {isLoading ? (
-        <div>"Loading..." </div>
+    <Col centerAlign>
+      {loading ? (
+        <div>Loading...</div>
       ) : (
         <Grid>
-          {dataArr.map((pokemon: PokemonDetail, index) => {
-            console.log("img", pokemon.sprites.front_default)
-            return (
-              <>
-                <Card url={pokemon.sprites.front_default} name={pokemon.name} />
-
-                {/* <div>type:</div> */}
-                {/* {pokemon.types.map((pokeType: TypeDetail, index) => {
-                return <div>{pokeType.type.name}</div>
-              })} */}
-                {/* <div>weight:{pokemon.weight}</div>
-              <div>height:{pokemon.height}</div>
-              <div>ability:{pokemon.abilities[0].ability.name}</div> */}
-              </>
-            )
-          })}
+          {pokemonData.map((pokemon: PokemonDetail, index) => (
+            <div key={index}>
+              <Card url={pokemon.sprites.front_default} name={pokemon.name} />
+            </div>
+          ))}
         </Grid>
       )}
-    </>
+      <Box>
+        <Button onClick={() => handlePageChange(prevUrl)}>Prev</Button>
+        <Button onClick={() => handlePageChange(nextUrl)}>Next</Button>
+      </Box>
+    </Col>
   )
 }
 

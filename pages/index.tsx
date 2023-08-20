@@ -1,36 +1,53 @@
 import { useEffect, useState } from "react"
-import {
-  PokemonDetail,
-  TypeDetail,
-  getAllPokemon,
-  loadPokemon,
-} from "../src/utils/pokemon"
-import { BASE_POKE_API } from "./api/request"
-import Image from "next/image"
+import { PokemonDetail, getAllPokemon, loadPokemon } from "src/utils/pokemon"
 import MainScreen from "src/MainScreen"
 import NavBar from "src/components/NavBar"
+import {
+  initialPokemonDataState,
+  loadingState,
+  pokemonDataState,
+} from "../recoil/state"
+import { useRecoilState } from "recoil"
+
+// const BASE_POKE_API = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=20"
+const INITIAL_POKE_API = "https://pokeapi.co/api/v2/pokemon"
 
 const Page = () => {
-  const [loading, setLoading] = useState(true)
-  const [pokemonData, setPokemonData] = useState<PokemonDetail[]>([])
+  // const [loading, setLoading] = useState(true)
+  // const [allPokemonData, setAllPokemonData] = useState<PokemonDetail[]>([])
   const [searchQuery, setSearchQuery] = useState("")
+
+  const [initialPokemonData, setInitialPokemonData] = useRecoilState(
+    initialPokemonDataState
+  )
+  const [pokemonData, setPokemonData] = useRecoilState(pokemonDataState)
+  const [loading, setLoading] = useRecoilState(loadingState)
+
   useEffect(() => {
-    const fetchPokemonData = async () => {
-      const res = await getAllPokemon(BASE_POKE_API)
+    const fetchInitialData = async () => {
+      const res = await getAllPokemon(INITIAL_POKE_API)
+      // 最初にinitialPokemonDataを更新
+      setInitialPokemonData(res)
+      // 次に、ポケモンの詳細データを取得し、pokemonDataを更新
       const loadedPokemonData = await loadPokemon(res.results)
+
+      setPokemonData(loadedPokemonData as PokemonDetail[])
+      // 最後にローディングの状態をfalseに更新
       setLoading(false)
-      setPokemonData(loadedPokemonData as [])
+      // setPokemonData(loadedPokemonData)
     }
-    fetchPokemonData()
+
+    fetchInitialData()
   }, [])
 
-  const filteredData = pokemonData.filter(pokemon =>
-    pokemon.name.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  // const filteredData = pokemonData.filter((pokemon: PokemonDetail) =>
+  //   pokemon.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // )
+
   return (
     <>
       <NavBar onSearchChange={setSearchQuery} />
-      <MainScreen dataArr={filteredData} isLoading={loading} />
+      <MainScreen />
     </>
   )
 }
