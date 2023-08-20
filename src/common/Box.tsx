@@ -19,6 +19,7 @@ export interface BoxProps {
   mrAuto?: boolean
   centerAlign?: boolean
   gap?: number
+  radius?: number
 }
 
 export const Box = styled.div<BoxProps>`
@@ -41,6 +42,7 @@ export const Box = styled.div<BoxProps>`
   ${props => (props.ml ? `margin-left: ${props.ml}px;` : null)}
   ${props => (props.centerAlign ? "align-items: center;" : null)}
   ${props => (props.gap ? `gap: ${props.gap}px;` : null)}
+  ${props => (props.radius ? `border-radius: ${props.radius}px;` : null)}
 `
 
 export const Row = styled(Box)`
