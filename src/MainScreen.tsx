@@ -1,34 +1,19 @@
-import { useEffect, useState } from "react"
-import Image from "next/image"
-import {
-  PokemonDetail,
-  TypeDetail,
-  getAllPokemon,
-  loadPokemon,
-} from "./utils/pokemon"
-import { BASE_POKE_API } from "@/pages/api/request"
+import { PokemonDetail } from "./utils/pokemon"
 import Card from "./common/Card"
 import { Grid } from "./index.styled"
 
-const MainScreen = () => {
-  const [loading, setLoading] = useState(true)
-  const [pokemonData, setPokemonData] = useState([])
-  useEffect(() => {
-    const fetchPokemonData = async () => {
-      const res = await getAllPokemon(BASE_POKE_API)
-      const loadedPokemonData = await loadPokemon(res.results)
-      setLoading(false)
-      setPokemonData(loadedPokemonData as [])
-    }
-    fetchPokemonData()
-  }, [])
+interface MainScreenProps {
+  dataArr: PokemonDetail[]
+  isLoading: boolean
+}
+const MainScreen = ({ dataArr, isLoading }: MainScreenProps) => {
   return (
     <>
-      {loading ? (
+      {isLoading ? (
         <div>"Loading..." </div>
       ) : (
         <Grid>
-          {pokemonData.map((pokemon: PokemonDetail, index) => {
+          {dataArr.map((pokemon: PokemonDetail, index) => {
             console.log("img", pokemon.sprites.front_default)
             return (
               <>
