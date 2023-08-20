@@ -8,10 +8,12 @@ import {
 import { BASE_POKE_API } from "./api/request"
 import Image from "next/image"
 import MainScreen from "src/MainScreen"
+import NavBar from "src/components/NavBar"
 
 const Page = () => {
   const [loading, setLoading] = useState(true)
-  const [pokemonData, setPokemonData] = useState([])
+  const [pokemonData, setPokemonData] = useState<PokemonDetail[]>([])
+  const [searchQuery, setSearchQuery] = useState("")
   useEffect(() => {
     const fetchPokemonData = async () => {
       const res = await getAllPokemon(BASE_POKE_API)
@@ -21,10 +23,14 @@ const Page = () => {
     }
     fetchPokemonData()
   }, [])
+
+  const filteredData = pokemonData.filter(pokemon =>
+    pokemon.name.toLowerCase().includes(searchQuery.toLowerCase())
+  )
   return (
     <>
-      <h2>PokeDex</h2>
-      <MainScreen />
+      <NavBar onSearchChange={setSearchQuery} />
+      <MainScreen dataArr={filteredData} isLoading={loading} />
     </>
   )
 }
