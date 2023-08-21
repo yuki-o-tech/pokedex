@@ -1,9 +1,9 @@
+import { useEffect } from "react"
 import type { AppProps } from "next/app"
 import Head from "next/head"
 import { RecoilRoot } from "recoil"
-import GlobalStyle from "../styles/globalCss"
-import { useEffect } from "react"
 import { useRecoilSnapshot } from "recoil"
+import GlobalStyle from "../styles/globalCss"
 
 function DebugObserver(): React.ReactNode {
   const snapshot = useRecoilSnapshot()

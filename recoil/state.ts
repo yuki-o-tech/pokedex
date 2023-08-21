@@ -1,5 +1,5 @@
 import { atom } from "recoil"
-import { PokemonAllResponseData, PokemonDetail } from "src/utils/pokemon"
+import { PokemonAllResponseData, PokemonDetail } from "src/utils/pokemonTypes"
 
 export const initialPokemonDataState = atom<PokemonAllResponseData | null>({
   key: "initialPokemonDataState",

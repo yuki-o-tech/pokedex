@@ -83,33 +83,7 @@ export interface TypeDetail {
   type: NamedAPIResource
 }
 
-interface NamedAPIResource {
+export interface NamedAPIResource {
   name: string
   url: string
-}
-
-export const getAllPokemon = (url: string): Promise<PokemonAllResponseData> => {
-  return new Promise((resolve, reject) => {
-    fetch(url)
-      .then(res => res.json())
-      .then(data => resolve(data))
-  })
-}
-
-export const getPokemon = (url: string) => {
-  return new Promise((resolve, reject) => {
-    fetch(url)
-      .then(res => res.json())
-      .then(data => resolve(data))
-  })
-}
-
-export const loadPokemon = async (data: Array<NamedAPIResource>) => {
-  const _pokemonData = await Promise.all(
-    data.map((el: any) => {
-      const pokemonRecord = getPokemon(el.url)
-      return pokemonRecord
-    })
-  )
-  return _pokemonData
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
-import { PokemonDetail, getAllPokemon, loadPokemon } from "src/utils/pokemon"
+import { useRecoilState } from "recoil"
+
 import MainScreen from "src/MainScreen"
 import NavBar from "src/components/NavBar"
 import {
@@ -7,14 +8,14 @@ import {
   loadingState,
   pokemonDataState,
 } from "../recoil/state"
-import { useRecoilState } from "recoil"
-
-// const BASE_POKE_API = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=20"
-const INITIAL_POKE_API = "https://pokeapi.co/api/v2/pokemon"
+import { PokemonDetail } from "src/utils/pokemonTypes"
+import {
+  INITIAL_POKE_API,
+  getAllPokemon,
+  loadPokemon,
+} from "src/utils/pokemonUtils"
 
 const Page = () => {
-  // const [loading, setLoading] = useState(true)
-  // const [allPokemonData, setAllPokemonData] = useState<PokemonDetail[]>([])
   const [searchQuery, setSearchQuery] = useState("")
 
   const [initialPokemonData, setInitialPokemonData] = useRecoilState(
@@ -34,15 +35,10 @@ const Page = () => {
       setPokemonData(loadedPokemonData as PokemonDetail[])
       // 最後にローディングの状態をfalseに更新
       setLoading(false)
-      // setPokemonData(loadedPokemonData)
     }
 
     fetchInitialData()
   }, [])
-
-  // const filteredData = pokemonData.filter((pokemon: PokemonDetail) =>
-  //   pokemon.name.toLowerCase().includes(searchQuery.toLowerCase())
-  // )
 
   return (
     <>
