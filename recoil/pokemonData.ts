@@ -20,17 +20,3 @@ export const loadingState = atom({
   key: "loadingState",
   default: true,
 })
-
-// 次のページのURLを保存するためのRecoilステート
-// このステートは、次のページに遷移するためのリンクを生成する際に使用されます
-export const nextUrlState = atom<string | null>({
-  key: "nextUrlState",
-  default: null,
-})
-
-// 前のページのURLを保存するためのRecoilステート
-// このステートは、前のページに戻るためのリンクを生成する際に使用されます
-export const prevUrlState = atom<string | null>({
-  key: "prevUrlState",
-  default: null,
-})

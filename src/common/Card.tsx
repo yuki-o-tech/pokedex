@@ -1,5 +1,5 @@
 import Image from "next/image"
-import Box, { CenterCol, CenterRow } from "./Box"
+import { CenterCol, CenterRow } from "./Box"
 import Text from "./Text"
 import { styled } from "styled-components"
 import { Colors } from "src/utils/Colors"
