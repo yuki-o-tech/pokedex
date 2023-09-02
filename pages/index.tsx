@@ -7,7 +7,7 @@ import {
   initialPokemonDataState,
   loadingState,
   pokemonDataState,
-} from "../recoil/state"
+} from "../recoil/pokemonData"
 import { PokemonDetail } from "src/utils/pokemonTypes"
 import {
   INITIAL_POKE_API,
@@ -25,20 +25,29 @@ const Page = () => {
   const [loading, setLoading] = useRecoilState(loadingState)
 
   useEffect(() => {
+    // 初期データを非同期で取得する
     const fetchInitialData = async () => {
-      const res = await getAllPokemon(INITIAL_POKE_API)
-      // 最初にinitialPokemonDataを更新
-      setInitialPokemonData(res)
-      // 次に、ポケモンの詳細データを取得し、pokemonDataを更新
-      const loadedPokemonData = await loadPokemon(res.results)
-
-      setPokemonData(loadedPokemonData as PokemonDetail[])
-      // 最後にローディングの状態をfalseに更新
-      setLoading(false)
+      try {
+        setLoading(true) // 最初にローディングの状態をtrueに更新
+        // 全ポケモンのデータを取得
+        const res = await getAllPokemon(INITIAL_POKE_API)
+        // 初期データをRecoilステートに保存
+        setInitialPokemonData(res)
+        // ポケモンの詳細データを非同期で取得
+        const loadedPokemonData = await loadPokemon(res.results)
+        // 詳細データをRecoilステートに保存
+        setPokemonData(loadedPokemonData as PokemonDetail[])
+        setLoading(false) // 最後にローディングの状態をfalseに更新
+      } catch (error) {
+        console.error("Failed to fetch data:", error)
+        // ローディング状態をfalseに設定
+        setLoading(false)
+      }
     }
 
+    // 非同期関数を実行
     fetchInitialData()
-  }, [])
+  }, []) // 依存配列が空なので、このuseEffectはマウント時に一回だけ実行される
 
   return (
     <>

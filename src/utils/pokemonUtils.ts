@@ -17,9 +17,7 @@ const fetchData = async (url: string) => {
   }
 }
 
-export const getAllPokemon = (
-  url: string = INITIAL_POKE_API
-): Promise<PokemonAllResponseData> => {
+export const getAllPokemon = (url: string): Promise<PokemonAllResponseData> => {
   return fetchData(url)
 }
 
