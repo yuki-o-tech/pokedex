@@ -45,7 +45,7 @@ const MainScreen = () => {
   }, [currentPage])
   console.log("pokemonData", pokemonData)
   return (
-    <Col centerAlign>
+    <Col centerAlign pb={40}>
       {loading ? (
         <CenterRow pt={140} pb={140}>
           <CircularProgress size={100} color="inherit" />
