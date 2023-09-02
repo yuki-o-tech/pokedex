@@ -11,7 +11,7 @@ import {
 import { PokemonDetail } from "src/utils/pokemonTypes"
 import {
   INITIAL_POKE_API,
-  getAllPokemon,
+  get20Pokemons,
   loadPokemon,
 } from "src/utils/pokemonUtils"
 
@@ -30,7 +30,7 @@ const Page = () => {
       try {
         setLoading(true) // 最初にローディングの状態をtrueに更新
         // 全ポケモンのデータを取得
-        const res = await getAllPokemon(INITIAL_POKE_API)
+        const res = await get20Pokemons(INITIAL_POKE_API)
         // 初期データをRecoilステートに保存
         setInitialPokemonData(res)
         // ポケモンの詳細データを非同期で取得

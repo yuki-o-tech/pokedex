@@ -1,10 +1,17 @@
 import {
   NamedAPIResource,
-  PokemonAllResponseData,
+  PokemonResponseData,
   PokemonDetail,
 } from "./pokemonTypes"
 
 export const INITIAL_POKE_API = "https://pokeapi.co/api/v2/pokemon"
+
+export const getPokemonListUrl = (offsetValue: number) => {
+  console.log(" offsetValue * 20 - 20", offsetValue * 20 - 20)
+  return `https://pokeapi.co/api/v2/pokemon?offset=${
+    offsetValue * 20 - 20
+  }&limit=20`
+}
 
 const fetchData = async (url: string) => {
   try {
@@ -17,7 +24,7 @@ const fetchData = async (url: string) => {
   }
 }
 
-export const getAllPokemon = (url: string): Promise<PokemonAllResponseData> => {
+export const get20Pokemons = (url: string): Promise<PokemonResponseData> => {
   return fetchData(url)
 }
 

@@ -1,8 +1,8 @@
 import { atom, selector } from "recoil"
-import { PokemonDetail, PokemonAllResponseData } from "src/utils/pokemonTypes"
+import { PokemonDetail, PokemonResponseData } from "src/utils/pokemonTypes"
 import {
   INITIAL_POKE_API,
-  getAllPokemon,
+  get20Pokemons,
   loadPokemon,
 } from "src/utils/pokemonUtils"
 
@@ -24,7 +24,7 @@ export const pokemonListState = selector<PokemonDetail[]>({
     const offset = (currentPage - 1) * 20 // オフセットを計算（1ページあたり20項目）
     console.log("call offset in the pokemonList", offset)
     // APIエンドポイント
-    const data: PokemonAllResponseData = await getAllPokemon(
+    const data: PokemonResponseData = await get20Pokemons(
       `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=20`
     )
     return loadPokemon(data.results) // ポケモンの詳細データを非同期で取得
@@ -36,7 +36,7 @@ export const pokemonListState = selector<PokemonDetail[]>({
 export const totalPokemonState = selector<number>({
   key: "totalPokemonState",
   get: async () => {
-    const data: PokemonAllResponseData = await getAllPokemon(INITIAL_POKE_API) // 初期APIエンドポイントからデータを取得
+    const data: PokemonResponseData = await get20Pokemons(INITIAL_POKE_API) // 初期APIエンドポイントからデータを取得
     return data.count // 総数を返す
   },
 })

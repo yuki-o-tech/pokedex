@@ -1,9 +1,9 @@
 import { atom } from "recoil"
-import { PokemonAllResponseData, PokemonDetail } from "src/utils/pokemonTypes"
+import { PokemonResponseData, PokemonDetail } from "src/utils/pokemonTypes"
 
 // 初期のポケモンデータを保存するためのRecoilステート
 // このステートは、アプリが最初にロードされたときに設定されます
-export const initialPokemonDataState = atom<PokemonAllResponseData | null>({
+export const initialPokemonDataState = atom<PokemonResponseData | null>({
   key: "initialPokemonDataState",
   default: null,
 })
