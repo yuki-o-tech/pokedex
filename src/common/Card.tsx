@@ -3,7 +3,7 @@ import { styled } from "styled-components"
 import Box, { CenterCol, CenterRow } from "./Box"
 import { GameText } from "./Text"
 
-import { Colors } from "src/utils/Colors"
+import { Colors, TypeColors } from "src/utils/Colors"
 
 interface CardProps {
   name: string
@@ -56,7 +56,7 @@ const Card = ({ name, imgUrl, height, weight, pokeTypes }: CardProps) => {
       h={300}
       gap={8}
       radius={10}
-      borderColor={pokeTypes[0].color}
+      borderColor={pokeTypes.length > 0 ? pokeTypes[0].color : Colors.BLACK}
     >
       {imgUrl === null ? (
         <CenterRow w={120} h={100}>

@@ -64,6 +64,7 @@ const MainScreen = () => {
   console.log("pokemonData", pokemonData)
 
   useEffect(() => {
+    setLoading(true)
     if (pokemonData.length > 0) {
       // 日本語の名前を取得
       const fetchJapaneseNames = async () => {
@@ -103,6 +104,9 @@ const MainScreen = () => {
         .catch(error => {
           console.error("Error while fetching names or types:", error)
         })
+        .finally(() => {
+          setLoading(false) // 全ての非同期処理が終了したらローディングを終了
+        })
     }
   }, [pokemonData])
 
@@ -110,7 +114,7 @@ const MainScreen = () => {
     <Col centerAlign pb={40}>
       {loading ? (
         <CenterRow pt={140} pb={140}>
-          <CircularProgress size={100} color="inherit" />
+          <CircularProgress size={100} color="warning" />
         </CenterRow>
       ) : (
         <Grid className={isAnimating ? "fade-entering" : "fade-entered"}>
