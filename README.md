@@ -12,6 +12,8 @@ This project aims to create a PokéDex using modern web technologies. It's built
 
 - Pokémon Detail Modal
 - Search Bar
+- Responsive design
+- Accessibility
 
 ## System Requirements
 
@@ -45,6 +47,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 - ポケモン詳細モーダルの実装
 - サーチバーの実装
+- レスポンシブデザイン
+- アクセシビリティ
 
 ## 動作環境
 
