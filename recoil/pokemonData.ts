@@ -1,5 +1,5 @@
 import { atom } from "recoil"
-import { PokemonResponseData, PokemonDetail } from "src/utils/pokemonTypes"
+import { PokemonResponseData, PokemonBasicData } from "src/utils/pokemonTypes"
 
 // 初期のポケモンデータを保存するためのRecoilステート
 // このステートは、アプリが最初にロードされたときに設定されます
@@ -10,7 +10,7 @@ export const initialPokemonDataState = atom<PokemonResponseData | null>({
 
 // ポケモンの詳細データ（名前、画像など）を保存するためのRecoilステート
 // このステートは、ユーザーがページを切り替えたときなどに更新されます
-export const pokemonDataState = atom<PokemonDetail[]>({
+export const pokemonDataState = atom<PokemonBasicData[]>({
   key: "pokemonDataState",
   default: [],
 })
@@ -19,4 +19,14 @@ export const pokemonDataState = atom<PokemonDetail[]>({
 export const loadingState = atom({
   key: "loadingState",
   default: true,
+})
+
+export const pokemonJapaneseNameState = atom({
+  key: "pokemonJapaneseNameState",
+  default: [] as string[],
+})
+
+export const pokemonTypeInJapaneseState = atom({
+  key: "pokemonTypeInJapaneseState",
+  default: [] as (string | null)[][],
 })

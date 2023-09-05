@@ -15,6 +15,6 @@ export const totalPokemonState = selector<number>({
   key: "totalPokemonState",
   get: async () => {
     const data: PokemonResponseData = await get20Pokemons(INITIAL_POKE_API) // 初期APIエンドポイントからデータを取得
-    return data.count // 総数を返す
+    return data.count
   },
 })
