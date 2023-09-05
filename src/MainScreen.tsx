@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useRecoilState, useSetRecoilState } from "recoil"
 import { useRecoilValue } from "recoil"
 import { CircularProgress, Pagination } from "@mui/material"
-import { CenterRow, Col } from "./common/Box"
+import { CenterCol, Col } from "./common/Box"
 import Card, { PokemonTypeInfo } from "./common/Card"
 import { Grid } from "./index.styled"
 import {
@@ -25,6 +25,8 @@ import {
   loadPokemon,
   getPokemonType,
 } from "./utils/pokemonUtils"
+import Text from "./common/Text"
+import { Colors } from "./utils/Colors"
 
 const MainScreen = () => {
   const pokemonData = useRecoilValue(pokemonDataState)
@@ -113,59 +115,64 @@ const MainScreen = () => {
   return (
     <Col centerAlign pb={40}>
       {loading ? (
-        <CenterRow pt={140} pb={140}>
+        <CenterCol pt={280} pb={140} gap={20}>
           <CircularProgress size={100} color="warning" />
-        </CenterRow>
+          <Text fs={25} color={Colors.BLACK}>
+            Loading...
+          </Text>
+        </CenterCol>
       ) : (
-        <Grid className={isAnimating ? "fade-entering" : "fade-entered"}>
-          {pokemonData.map((pokemon: PokemonBasicData, index) => {
-            const japaneseName = japaneseNames[index]
-            const typesForThisPokemon = (
-              pokemonTypesInJapanese[index] || []
-            ).filter(Boolean)
+        <>
+          <Grid className={isAnimating ? "fade-entering" : "fade-entered"}>
+            {pokemonData.map((pokemon: PokemonBasicData, index) => {
+              const japaneseName = japaneseNames[index]
+              const typesForThisPokemon = (
+                pokemonTypesInJapanese[index] || []
+              ).filter(Boolean)
 
-            const pokeTypes = typesForThisPokemon
-              .map(type => {
-                if (type) {
-                  return {
-                    type: type,
-                    color: getPokemonTypeIconColor(type),
-                    icon: () => getPokemonTypeIcon(type),
+              const pokeTypes = typesForThisPokemon
+                .map(type => {
+                  if (type) {
+                    return {
+                      type: type,
+                      color: getPokemonTypeIconColor(type),
+                      icon: () => getPokemonTypeIcon(type),
+                    }
                   }
-                }
-              })
-              .filter(Boolean) as PokemonTypeInfo[]
+                })
+                .filter(Boolean) as PokemonTypeInfo[]
 
-            return (
-              <div
-                key={index}
-                className={isAnimating ? "fade-entering" : "fade-entered"}
-              >
-                <Card
-                  // imgUrl={pokemon.sprites.front_default} // game ish img
-                  imgUrl={
-                    pokemon.sprites.other["official-artwork"].front_default
-                  }
-                  name={japaneseName}
-                  height={pokemon.height / 10}
-                  weight={pokemon.weight / 10}
-                  pokeTypes={pokeTypes}
-                />
-              </div>
-            )
-          })}
-        </Grid>
+              return (
+                <div
+                  key={index}
+                  className={isAnimating ? "fade-entering" : "fade-entered"}
+                >
+                  <Card
+                    // imgUrl={pokemon.sprites.front_default} // game ish img
+                    imgUrl={
+                      pokemon.sprites.other["official-artwork"].front_default
+                    }
+                    name={japaneseName}
+                    height={pokemon.height / 10}
+                    weight={pokemon.weight / 10}
+                    pokeTypes={pokeTypes}
+                  />
+                </div>
+              )
+            })}
+          </Grid>
+          <Pagination
+            count={totalPage}
+            page={currentPage}
+            hidePrevButton={currentPage === 1}
+            hideNextButton={currentPage === totalPage}
+            onChange={(event, page) => {
+              hundlePageChange(page)
+              console.log("page argument number", page)
+            }}
+          />
+        </>
       )}
-      <Pagination
-        count={totalPage}
-        page={currentPage}
-        hidePrevButton={currentPage === 1}
-        hideNextButton={currentPage === totalPage}
-        onChange={(event, page) => {
-          hundlePageChange(page)
-          console.log("page argument number", page)
-        }}
-      />
     </Col>
   )
 }
