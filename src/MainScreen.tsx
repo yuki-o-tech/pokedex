@@ -3,7 +3,7 @@ import { useRecoilState, useSetRecoilState } from "recoil"
 import { useRecoilValue } from "recoil"
 import { CircularProgress, Pagination } from "@mui/material"
 import { CenterRow, Col } from "./common/Box"
-import Card from "./common/Card"
+import Card, { PokemonTypeInfo } from "./common/Card"
 import { Grid } from "./index.styled"
 import {
   loadingState,
@@ -11,7 +11,12 @@ import {
   pokemonJapaneseNameState,
   pokemonTypeInJapaneseState,
 } from "../recoil/pokemonData"
-import { PokemonBasicData, TypeDetail } from "./utils/pokemonTypes"
+import { currentPageState, totalPokemonState } from "../recoil/pagination"
+import {
+  getPokemonTypeIconColor,
+  getPokemonTypeIcon,
+} from "./utils/getPokemonTypeIcon"
+import { PokemonBasicData } from "./utils/pokemonTypes"
 import {
   get20Pokemons,
   getJapaneseName,
@@ -20,7 +25,6 @@ import {
   loadPokemon,
   getPokemonType,
 } from "./utils/pokemonUtils"
-import { currentPageState, totalPokemonState } from "../recoil/pagination"
 
 const MainScreen = () => {
   const pokemonData = useRecoilValue(pokemonDataState)
@@ -112,8 +116,21 @@ const MainScreen = () => {
         <Grid className={isAnimating ? "fade-entering" : "fade-entered"}>
           {pokemonData.map((pokemon: PokemonBasicData, index) => {
             const japaneseName = japaneseNames[index]
-            const typesForThisPokemon = pokemonTypesInJapanese[index] || []
-            const japaneseType = typesForThisPokemon.join(" / ")
+            const typesForThisPokemon = (
+              pokemonTypesInJapanese[index] || []
+            ).filter(Boolean)
+
+            const pokeTypes = typesForThisPokemon
+              .map(type => {
+                if (type) {
+                  return {
+                    type: type,
+                    color: getPokemonTypeIconColor(type),
+                    icon: () => getPokemonTypeIcon(type),
+                  }
+                }
+              })
+              .filter(Boolean) as PokemonTypeInfo[]
 
             return (
               <div
@@ -128,7 +145,7 @@ const MainScreen = () => {
                   name={japaneseName}
                   height={pokemon.height / 10}
                   weight={pokemon.weight / 10}
-                  pokeType={japaneseType || "未知のタイプ"}
+                  pokeTypes={pokeTypes}
                 />
               </div>
             )

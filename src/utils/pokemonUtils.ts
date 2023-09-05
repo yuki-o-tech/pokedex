@@ -37,11 +37,8 @@ export const getPokemon = (url: string): Promise<PokemonBasicData> => {
 
 export const loadPokemon = async (data: Array<NamedAPIResource>) => {
   const pokemonData = await Promise.all(data.map(el => getPokemon(el.url)))
-  console.log("basic pokemon data", pokemonData)
-  console.log("おもさ", pokemonData[0].weight / 10)
-  console.log("たかさ", pokemonData[0].height / 10)
-  console.log("タイプ", pokemonData[0].types)
-  console.log("とくせい", pokemonData[0].abilities)
+  //TODO: Adds Pokemon Details when adds the DetailModal
+  // console.log("とくせい", pokemonData[0].abilities)
 
   return pokemonData as PokemonBasicData[]
 }
@@ -57,13 +54,14 @@ export const getJapaneseName = (
   pokemonDetail: PokemonDetailData
 ): string | null => {
   const japaneseEntry = pokemonDetail.names.find(
-    entry => entry.language.name === "ja" //|| entry.language.name === "ja-Hrkt"
+    entry => entry.language.name === "ja"
   )
 
-  console.log("ぜんぶ'", pokemonDetail)
-  console.log("なまえ", pokemonDetail.names)
-  console.log("せつめい", pokemonDetail.flavor_text_entries)
-  console.log("ぶんるい", pokemonDetail.genera)
+  //TODO: Adds Pokemon Details when adds the DetailModal
+  // console.log("ぜんぶ'", pokemonDetail)
+  // console.log("なまえ", pokemonDetail.names)
+  // console.log("せつめい", pokemonDetail.flavor_text_entries)
+  // console.log("ぶんるい", pokemonDetail.genera)
   return japaneseEntry ? japaneseEntry.name : null
 }
 

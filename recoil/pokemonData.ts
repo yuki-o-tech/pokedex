@@ -21,13 +21,6 @@ export const loadingState = atom({
   default: true,
 })
 
-// // 各ポケモンの詳細情報を保存するためのRecoilステート
-// export const pokemonJapaneseDetailDataState = atom<
-//   Record<string, PokemonDetail>
-// >({
-//   key: "pokemonDetailDataState",
-//   default: {},
-// })
 export const pokemonJapaneseNameState = atom({
   key: "pokemonJapaneseNameState",
   default: [] as string[],

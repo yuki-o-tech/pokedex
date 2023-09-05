@@ -21,7 +21,7 @@ export interface PokemonBasicData {
   moves: MoveDetail[]
   name: string
   order: number
-  past_types: any[] // この部分は具体的な型情報が提供されていないので、一時的にanyを使用しています。
+  past_types: any[] // 一時的にanyを使用しています。
   species: NamedAPIResource
   sprites: Sprites
   stats: StatDetail[]
