@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { WideBox } from "src/common/Box"
-import Text from "src/common/Text"
+import { GameText } from "src/common/Text"
 import { Colors } from "src/utils/Colors"
 
 export const Container = styled(WideBox)`
@@ -18,7 +18,7 @@ interface NavBarProps {
 const NavBar = ({ onSearchChange }: NavBarProps) => {
   return (
     <Container h={80}>
-      <Text fs={30}>PokeDex</Text>
+      <GameText fs={30}>PokeDex</GameText>
       <input
         placeholder="Search"
         type="text"

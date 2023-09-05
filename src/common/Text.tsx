@@ -39,6 +39,10 @@ export const RobotoText = styled(Text)`
   font-family: Roboto;
 `
 
+export const GameText = styled(Text)`
+  font-family: "DotGothic16";
+`
+
 export const NoWrapText = styled(Text)`
   white-space: nowrap;
 `

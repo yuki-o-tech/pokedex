@@ -5,12 +5,20 @@ import { CircularProgress, Pagination } from "@mui/material"
 import { CenterRow, Col } from "./common/Box"
 import Card from "./common/Card"
 import { Grid } from "./index.styled"
-import { loadingState, pokemonDataState } from "../recoil/pokemonData"
-import { PokemonDetail } from "./utils/pokemonTypes"
+import {
+  loadingState,
+  pokemonDataState,
+  pokemonJapaneseNameState,
+  pokemonTypeInJapaneseState,
+} from "../recoil/pokemonData"
+import { PokemonBasicData, TypeDetail } from "./utils/pokemonTypes"
 import {
   get20Pokemons,
+  getJapaneseName,
+  getJapanesePokemonData,
   getPokemonListUrl,
   loadPokemon,
+  getPokemonType,
 } from "./utils/pokemonUtils"
 import { currentPageState, totalPokemonState } from "../recoil/pagination"
 
@@ -21,15 +29,21 @@ const MainScreen = () => {
   const [isAnimating, setIsAnimating] = useState(true)
   const totalItems = useRecoilValue(totalPokemonState)
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState)
+  const [japaneseNames, setJapaneseNames] = useRecoilState(
+    pokemonJapaneseNameState
+  )
+  const [pokemonTypesInJapanese, setPokemonTypesInJapanese] = useRecoilState(
+    pokemonTypeInJapaneseState
+  )
 
-  const testhundlePageeChange = async (page: number) => {
+  const hundlePageChange = async (page: number) => {
     setLoading(true) // ローディング状態をtrueに設定
     const newUrl = getPokemonListUrl(page)
     console.log("page", page)
     const newData = await get20Pokemons(newUrl)
     console.log("newData", newData)
     const newLoadedData = await loadPokemon(newData.results)
-    setPokemonData(newLoadedData as PokemonDetail[]) // 新しいデータでステートを更新
+    setPokemonData(newLoadedData as PokemonBasicData[]) // 新しいデータでステートを更新
     setCurrentPage(page)
     console.log("new current page", currentPage)
     setLoading(false) // ローディング状態をfalseに設定
@@ -44,6 +58,50 @@ const MainScreen = () => {
     console.log("Current page has been updated: ", currentPage)
   }, [currentPage])
   console.log("pokemonData", pokemonData)
+
+  useEffect(() => {
+    if (pokemonData.length > 0) {
+      // 日本語の名前を取得
+      const fetchJapaneseNames = async () => {
+        const newJapaneseNames = [] as string[] // 配列を用意
+
+        for (const pokemon of pokemonData) {
+          const pokemonDetail = await getJapanesePokemonData(
+            pokemon.species.url
+          )
+          const japaneseName = getJapaneseName(pokemonDetail)
+          if (japaneseName !== null) {
+            newJapaneseNames.push(japaneseName)
+          }
+        }
+
+        setJapaneseNames(newJapaneseNames)
+      }
+
+      // 日本語のタイプを取得
+      const fetchJapaneseTypes = async () => {
+        const newJapaneseTypes = await Promise.all(
+          pokemonData.map(async (pokemon: PokemonBasicData) => {
+            console.log("pokemon.types", pokemon.types)
+            return await getPokemonType(pokemon.types)
+          })
+        )
+        if (newJapaneseTypes !== null) {
+          return setPokemonTypesInJapanese(newJapaneseTypes)
+        }
+      }
+
+      // 名前とタイプの取得を並列で実行
+      Promise.all([fetchJapaneseNames(), fetchJapaneseTypes()])
+        .then(() => {
+          console.log("Fetched both names and types in Japanese.")
+        })
+        .catch(error => {
+          console.error("Error while fetching names or types:", error)
+        })
+    }
+  }, [pokemonData])
+
   return (
     <Col centerAlign pb={40}>
       {loading ? (
@@ -52,17 +110,29 @@ const MainScreen = () => {
         </CenterRow>
       ) : (
         <Grid className={isAnimating ? "fade-entering" : "fade-entered"}>
-          {pokemonData.map((pokemon: PokemonDetail, index) => (
-            <div
-              key={index}
-              className={isAnimating ? "fade-entering" : "fade-entered"}
-            >
-              <Card
-                url={pokemon.sprites.front_default}
-                name={pokemon.species.name}
-              />
-            </div>
-          ))}
+          {pokemonData.map((pokemon: PokemonBasicData, index) => {
+            const japaneseName = japaneseNames[index]
+            const typesForThisPokemon = pokemonTypesInJapanese[index] || []
+            const japaneseType = typesForThisPokemon.join(" / ")
+
+            return (
+              <div
+                key={index}
+                className={isAnimating ? "fade-entering" : "fade-entered"}
+              >
+                <Card
+                  // imgUrl={pokemon.sprites.front_default} // game ish img
+                  imgUrl={
+                    pokemon.sprites.other["official-artwork"].front_default
+                  }
+                  name={japaneseName}
+                  height={pokemon.height / 10}
+                  weight={pokemon.weight / 10}
+                  pokeType={japaneseType || "未知のタイプ"}
+                />
+              </div>
+            )
+          })}
         </Grid>
       )}
       <Pagination
@@ -71,7 +141,7 @@ const MainScreen = () => {
         hidePrevButton={currentPage === 1}
         hideNextButton={currentPage === totalPage}
         onChange={(event, page) => {
-          testhundlePageeChange(page)
+          hundlePageChange(page)
           console.log("page argument number", page)
         }}
       />

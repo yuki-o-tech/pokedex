@@ -8,7 +8,7 @@ import {
   loadingState,
   pokemonDataState,
 } from "../recoil/pokemonData"
-import { PokemonDetail } from "src/utils/pokemonTypes"
+import { PokemonBasicData } from "src/utils/pokemonTypes"
 import {
   INITIAL_POKE_API,
   get20Pokemons,
@@ -36,7 +36,7 @@ const Page = () => {
         // ポケモンの詳細データを非同期で取得
         const loadedPokemonData = await loadPokemon(res.results)
         // 詳細データをRecoilステートに保存
-        setPokemonData(loadedPokemonData as PokemonDetail[])
+        setPokemonData(loadedPokemonData as PokemonBasicData[])
         setLoading(false) // 最後にローディングの状態をfalseに更新
       } catch (error) {
         console.error("Failed to fetch data:", error)
